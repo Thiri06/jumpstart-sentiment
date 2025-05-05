@@ -11,6 +11,7 @@ class Review extends Model
         'product_id',
         'review_type',
         'description',
+        'rating',
         'sentiment_status',
     ];
 

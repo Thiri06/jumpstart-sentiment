@@ -24,4 +24,19 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+    /**
+     * Get only product reviews (not inquiries).
+     */
+    public function productReviews()
+    {
+        return $this->hasMany(Review::class)->where('review_type', 'review');
+    }
+
+    /**
+     * Get only product inquiries.
+     */
+    public function inquiries()
+    {
+        return $this->hasMany(Review::class)->where('review_type', 'inquiry');
+    }
 }
