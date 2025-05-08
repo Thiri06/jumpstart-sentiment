@@ -75,33 +75,38 @@ class SentimentAnalyzer
                 throw new Exception('Invalid API response format');
             }
 
+            // Handle doubly-nested array structure [[{...}, {...}, ...]]
+            if (isset($results[0]) && is_array($results[0]) && !isset($results[0]['label'])) {
+                $results = $results[0]; // Unwrap the outer array
+                Log::info('Unwrapped nested array structure');
+            }
+
             // Case 1: Results is an array of objects with label and score
-            // FIX: If results[0] exists and has a label, just return that label directly
             if (isset($results[0]) && isset($results[0]['label'])) {
-                Log::info('Selected label (Case 1): ' . $results[0]['label']);
-                return $results[0]['label'];
+                // Find the highest scoring label
+                $highestScore = 0;
+                $selectedLabel = 'Neutral'; // Default
+
+                foreach ($results as $result) {
+                    if (isset($result['label']) && isset($result['score']) && $result['score'] > $highestScore) {
+                        $highestScore = $result['score'];
+                        $selectedLabel = $result['label'];
+                    }
+                }
+
+                Log::info('Selected label (from array): ' . $selectedLabel . ' with score: ' . $highestScore);
+                return $selectedLabel;
             }
 
             // Case 2: Results is a single object with label
             if (isset($results['label'])) {
-                Log::info('Selected label (Case 2): ' . $results['label']);
+                Log::info('Selected label (from single object): ' . $results['label']);
                 return $results['label'];
             }
 
-            // Case 3: Results is an array of label/score pairs
-            // Find the one with highest score
-            $highestScore = 0;
-            $selectedLabel = 'Neutral';
-
-            foreach ($results as $result) {
-                if (isset($result['label']) && isset($result['score']) && $result['score'] > $highestScore) {
-                    $highestScore = $result['score'];
-                    $selectedLabel = $result['label'];
-                }
-            }
-
-            Log::info('Selected label (Case 3): ' . $selectedLabel);
-            return $selectedLabel;
+            // Case 3: If we reach here, the format is unexpected
+            Log::warning('Unexpected API response format: ' . json_encode($results));
+            return 'Neutral'; // Default fallback
         } catch (Exception $e) {
             Log::error('API connection error: ' . $e->getMessage());
             throw $e; // Re-throw to be caught by the main analyze method

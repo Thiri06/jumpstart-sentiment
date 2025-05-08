@@ -53,8 +53,7 @@ class ReviewSeeder extends Seeder
 
             for ($i = 0; $i < $numInquiries; $i++) {
                 $inquiryText = $this->getRandomInquiry();
-                $sentiment = $this->getSentimentForInquiry($inquiryText);
-
+                $sentiment = $this->getEnhancedSentimentForInquiry($inquiryText);
                 $inquiries[] = [
                     'user_id' => $userIds[array_rand($userIds)],
                     'product_id' => $productId,
@@ -69,9 +68,9 @@ class ReviewSeeder extends Seeder
         }
 
         // Add some general inquiries (not tied to specific products)
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $inquiryText = $this->getRandomGeneralInquiry();
-            $sentiment = $this->getSentimentForInquiry($inquiryText);
+            $sentiment = $this->getEnhancedSentimentForInquiry($inquiryText);
 
             $inquiries[] = [
                 'user_id' => $userIds[array_rand($userIds)],
@@ -190,7 +189,12 @@ class ReviewSeeder extends Seeder
             "Do you have a size guide for this product? I'm between sizes.",
             "Can this product be returned if it doesn't fit properly?",
             "Is this product suitable for children or is it adults only?",
-            "Does this product require any special care instructions?"
+            "Does this product require any special care instructions?",
+            "I love the design of this product! Can you tell me if it comes in a larger size?",
+            "I'm very disappointed with the quality of this product. How can I return it for a refund?",
+            "This product is amazing! Do you have any similar items you would recommend?",
+            "I received a damaged item. Can you please send a replacement as soon as possible?",
+            "I've been waiting for this product to be back in stock for weeks. When will it be available again?"
         ];
 
         return $inquiries[array_rand($inquiries)];
@@ -216,33 +220,129 @@ class ReviewSeeder extends Seeder
             "What are your customer service hours?",
             "How can I update my account information?",
             "Do you ship to PO boxes or military addresses?",
-            "I love your brand! When will you be launching new collections?"
+            "I love your brand! When will you be launching new collections?",
+            "I'm extremely frustrated with your customer service. I've been trying to resolve an issue for weeks!",
+            "Thank you for the excellent service! Your team went above and beyond to help me.",
+            "I'm concerned about the security of my payment information on your website. What measures do you have in place?",
+            "My order has been delayed for over a week now. This is unacceptable!",
+            "I'm interested in wholesale opportunities. Do you have a program for retailers?"
         ];
 
         return $generalInquiries[array_rand($generalInquiries)];
     }
 
     /**
-     * Get sentiment for an inquiry
+     * Get enhanced sentiment for an inquiry with more variety
      */
-    private function getSentimentForInquiry(string $inquiry): string
+    private function getEnhancedSentimentForInquiry(string $inquiry): string
     {
-        // Most inquiries are neutral
-        if (
-            strpos(strtolower($inquiry), 'love') !== false ||
-            strpos(strtolower($inquiry), 'great') !== false ||
-            strpos(strtolower($inquiry), 'amazing') !== false
-        ) {
-            return 'Positive';
-        } elseif (
-            strpos(strtolower($inquiry), 'problem') !== false ||
-            strpos(strtolower($inquiry), 'issue') !== false ||
-            strpos(strtolower($inquiry), 'trouble') !== false ||
-            strpos(strtolower($inquiry), 'damaged') !== false
-        ) {
-            return 'Negative';
-        } else {
-            return 'Neutral';
+        // Keywords that indicate sentiment
+        $veryPositiveKeywords = ['love', 'amazing', 'excellent', 'fantastic', 'outstanding', 'thrilled'];
+        $positiveKeywords = ['good', 'nice', 'happy', 'pleased', 'thank you', 'thanks', 'helpful'];
+        $negativeKeywords = ['disappointed', 'unhappy', 'poor', 'issue', 'problem', 'trouble', 'damaged'];
+        $veryNegativeKeywords = ['terrible', 'awful', 'horrible', 'worst', 'frustrated', 'unacceptable', 'never'];
+
+        $inquiryLower = strtolower($inquiry);
+
+        // Check for very positive sentiment
+        foreach ($veryPositiveKeywords as $keyword) {
+            if (strpos($inquiryLower, $keyword) !== false) {
+                return 'Very Positive';
+            }
         }
+
+        // Check for positive sentiment
+        foreach ($positiveKeywords as $keyword) {
+            if (strpos($inquiryLower, $keyword) !== false) {
+                return 'Positive';
+            }
+        }
+
+        // Check for very negative sentiment
+        foreach ($veryNegativeKeywords as $keyword) {
+            if (strpos($inquiryLower, $keyword) !== false) {
+                return 'Very Negative';
+            }
+        }
+
+        // Check for negative sentiment
+        foreach ($negativeKeywords as $keyword) {
+            if (strpos($inquiryLower, $keyword) !== false) {
+                return 'Negative';
+            }
+        }
+
+        // If no specific sentiment is detected, randomly assign a sentiment with a bias toward neutral
+        $random = rand(1, 100);
+        if ($random <= 50) {
+            return 'Neutral';
+        } elseif ($random <= 70) {
+            return 'Positive';
+        } elseif ($random <= 85) {
+            return 'Negative';
+        } elseif ($random <= 95) {
+            return 'Very Positive';
+        } else {
+            return 'Very Negative';
+        }
+    }
+
+
+    /**
+     * Generate a subject line from the inquiry text
+     */
+    private function generateSubjectFromInquiry(string $inquiry): string
+    {
+        // Extract first few words (up to 8) for the subject
+        $words = explode(' ', $inquiry);
+        $subjectWords = array_slice($words, 0, min(8, count($words)));
+        $subject = implode(' ', $subjectWords);
+
+        // Add ellipsis if truncated
+        if (count($words) > 8) {
+            $subject .= '...';
+        }
+
+        // Common subject prefixes
+        $prefixes = [
+            'Question about ',
+            'Inquiry: ',
+            'Help with ',
+            'Information on ',
+            'Request: ',
+            '', // Sometimes no prefix
+            '',
+            ''
+        ];
+
+        // For specific types of inquiries, use more specific subjects
+        if (stripos($inquiry, 'shipping') !== false) {
+            return 'Shipping Question';
+        } elseif (stripos($inquiry, 'return') !== false) {
+            return 'Return Policy Inquiry';
+        } elseif (stripos($inquiry, 'size') !== false || stripos($inquiry, 'fit') !== false) {
+            return 'Size & Fit Question';
+        } elseif (stripos($inquiry, 'damaged') !== false || stripos($inquiry, 'broken') !== false) {
+            return 'Damaged Item Report';
+        } elseif (stripos($inquiry, 'discount') !== false || stripos($inquiry, 'coupon') !== false || stripos($inquiry, 'sale') !== false) {
+            return 'Discount Inquiry';
+        } elseif (stripos($inquiry, 'track') !== false || stripos($inquiry, 'order status') !== false) {
+            return 'Order Tracking Question';
+        } elseif (stripos($inquiry, 'cancel') !== false) {
+            return 'Order Cancellation Request';
+        }
+
+        // For general inquiries, use a prefix + truncated inquiry
+        if (strlen($subject) < 5) {
+            return 'General Inquiry';
+        }
+
+        // 50% chance to use a prefix
+        if (rand(0, 1) == 1) {
+            $prefix = $prefixes[array_rand($prefixes)];
+            return $prefix . $subject;
+        }
+
+        return $subject;
     }
 }

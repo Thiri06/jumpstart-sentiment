@@ -215,13 +215,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-box-seam"></i> Products
+                            <a class="nav-link" href="{{ route('admin.reviews') }}">
+                                <i class="bi bi-chat-square-text"></i> Reviews
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-chat-square-text"></i> Reviews
+                            <a class="nav-link" href="{{ route('admin.inquiries') }}">
+                                <i class="bi bi-chat-dots"></i> Inquiries
                             </a>
                         </li>
                         <li class="nav-item">
@@ -268,9 +268,9 @@
                                         <i class="bi bi-box-seam"></i>
                                     </div>
                                     <h5 class="card-title">Total Products</h5>
-                                    <h2 class="mb-0">124</h2>
-                                    <p class="text-success mb-0 mt-2">
-                                        <i class="bi bi-arrow-up"></i> 12% increase
+                                    <h2 class="mb-0">{{ $totalProducts }}</h2>
+                                    <p class="text-{{ $productGrowth >= 0 ? 'success' : 'danger' }} mb-0 mt-2">
+                                        <i class="bi bi-arrow-{{ $productGrowth >= 0 ? 'up' : 'down' }}"></i> {{ abs($productGrowth) }}% {{ $productGrowth >= 0 ? 'increase' : 'decrease' }}
                                     </p>
                                 </div>
                             </div>
@@ -282,9 +282,9 @@
                                         <i class="bi bi-chat-square-text"></i>
                                     </div>
                                     <h5 class="card-title">Total Reviews</h5>
-                                    <h2 class="mb-0">842</h2>
-                                    <p class="text-success mb-0 mt-2">
-                                        <i class="bi bi-arrow-up"></i> 8% increase
+                                    <h2 class="mb-0">{{ $totalReviews }}</h2>
+                                    <p class="text-{{ $reviewGrowth >= 0 ? 'success' : 'danger' }} mb-0 mt-2">
+                                        <i class="bi bi-arrow-{{ $reviewGrowth >= 0 ? 'up' : 'down' }}"></i> {{ abs($reviewGrowth) }}% {{ $reviewGrowth >= 0 ? 'increase' : 'decrease' }}
                                     </p>
                                 </div>
                             </div>
@@ -296,9 +296,9 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <h5 class="card-title">Total Users</h5>
-                                    <h2 class="mb-0">1,254</h2>
-                                    <p class="text-success mb-0 mt-2">
-                                        <i class="bi bi-arrow-up"></i> 5% increase
+                                    <h2 class="mb-0">{{ $totalUsers }}</h2>
+                                    <p class="text-{{ $userGrowth >= 0 ? 'success' : 'danger' }} mb-0 mt-2">
+                                        <i class="bi bi-arrow-{{ $userGrowth >= 0 ? 'up' : 'down' }}"></i> {{ abs($userGrowth) }}% {{ $userGrowth >= 0 ? 'increase' : 'decrease' }}
                                     </p>
                                 </div>
                             </div>
@@ -310,15 +310,14 @@
                                         <i class="bi bi-question-circle"></i>
                                     </div>
                                     <h5 class="card-title">Inquiries</h5>
-                                    <h2 class="mb-0">56</h2>
-                                    <p class="text-danger mb-0 mt-2">
-                                        <i class="bi bi-arrow-down"></i> 3% decrease
+                                    <h2 class="mb-0">{{ $totalInquiries }}</h2>
+                                    <p class="text-{{ $inquiryGrowth >= 0 ? 'success' : 'danger' }} mb-0 mt-2">
+                                        <i class="bi bi-arrow-{{ $inquiryGrowth >= 0 ? 'up' : 'down' }}"></i> {{ abs($inquiryGrowth) }}% {{ $inquiryGrowth >= 0 ? 'increase' : 'decrease' }}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Sentiment Analysis Overview -->
                     <div class="row mb-4">
                         <div class="col-md-12">
@@ -328,25 +327,25 @@
                                     <div class="row">
                                         <div class="col-md-3 text-center">
                                             <div class="sentiment-positive p-3 rounded-3 mb-2">
-                                                <h3 class="mb-0">65%</h3>
+                                                <h3 class="mb-0">{{ $sentimentPercentages['positive'] }}%</h3>
                                                 <p class="mb-0">Positive</p>
                                             </div>
                                         </div>
                                         <div class="col-md-3 text-center">
                                             <div class="sentiment-negative p-3 rounded-3 mb-2">
-                                                <h3 class="mb-0">15%</h3>
+                                                <h3 class="mb-0">{{ $sentimentPercentages['negative'] }}%</h3>
                                                 <p class="mb-0">Negative</p>
                                             </div>
                                         </div>
                                         <div class="col-md-3 text-center">
                                             <div class="sentiment-neutral p-3 rounded-3 mb-2">
-                                                <h3 class="mb-0">20%</h3>
+                                                <h3 class="mb-0">{{ $sentimentPercentages['neutral'] }}%</h3>
                                                 <p class="mb-0">Neutral</p>
                                             </div>
                                         </div>
                                         <div class="col-md-3 text-center">
                                             <div class="sentiment-pending p-3 rounded-3 mb-2">
-                                                <h3 class="mb-0">42</h3>
+                                                <h3 class="mb-0">{{ $pendingAnalysis }}</h3>
                                                 <p class="mb-0">Pending Analysis</p>
                                             </div>
                                         </div>
@@ -357,7 +356,7 @@
                     </div>
 
                     <!-- Tabs for Reviews and Inquiries -->
-                    <ul class="nav nav-tabs" id="reviewTabs" role="tablist">
+                    {{-- <ul class="nav nav-tabs" id="reviewTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="product-reviews-tab" data-bs-toggle="tab" data-bs-target="#product-reviews" type="button" role="tab" aria-controls="product-reviews" aria-selected="true">
                                 <i class="bi bi-star me-2"></i>Product Reviews
@@ -754,7 +753,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </main>
         </div>

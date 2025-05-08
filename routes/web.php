@@ -37,6 +37,15 @@ Route::middleware(['auth', 'auth-user'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/reviews', [AdminController::class, 'showReviews'])->name('reviews');
+    Route::get('/inquiries', [AdminController::class, 'showInquiries'])->name('inquiries');
+
+
+    // Route for deleting reviews
+    Route::delete('/reviews/{review}', [App\Http\Controllers\Admin\AdminController::class, 'deleteReview'])->name('reviews.delete');
+
+    // Route for deleting inquiries
+    Route::delete('/inquiries/{review}', [AdminController::class, 'deleteInquiry'])->name('inquiries.delete');
 });
 
 require __DIR__ . '/auth.php';

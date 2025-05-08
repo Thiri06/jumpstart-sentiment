@@ -27,6 +27,10 @@ class ProductController extends Controller
         // Get reviews for this product
         $reviews = Review::where('product_id', $product->id)
             ->where('review_type', 'review')
+            ->whereHas('user', function ($query) {
+                $query->where('is_admin', false); // Assuming 'is_admin' is a boolean field
+                // Or if you use a role field: $query->where('role', '!=', 'admin');
+            })
             ->latest()
             ->paginate(5); // Show 5 reviews per page
 
