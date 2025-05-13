@@ -616,28 +616,6 @@
                                                         <span class="badge bg-warning badge-sentiment">Pending</span>
                                                     @endif
                                                 </td>
-                                                {{-- <td>
-                                                    @php
-                                                        $statusClass = '';
-                                                        $statusText = 'Pending';
-                                                        
-                                                        if(isset($inquiry->status)) {
-                                                            if($inquiry->status == 'responded') {
-                                                                $statusClass = 'bg-primary';
-                                                                $statusText = 'Responded';
-                                                            } elseif($inquiry->status == 'pending') {
-                                                                $statusClass = 'bg-warning';
-                                                                $statusText = 'Pending';
-                                                            }
-                                                        }
-                                                        
-                                                        if(isset($inquiry->priority) && $inquiry->priority == 'high') {
-                                                            $statusClass = 'bg-danger';
-                                                            $statusText = 'Urgent';
-                                                        }
-                                                    @endphp
-                                                    <span class="badge {{ $statusClass }} status-badge">{{ $statusText }}</span>
-                                                </td> --}}
                                                 <td>{{ $inquiry->created_at->format('M d, Y') }}</td>
                                                 <td>
                                                     <div class="btn-group">

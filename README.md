@@ -326,21 +326,21 @@ HUGGINGFACE_API_KEY=your_api_key</code></pre>
               <i class="bi bi-graph-up" style="font-size: 3rem; color: #28a745;"></i>
             </div>
             <h5>Enhanced Customer Understanding</h5>
-            <p>Gain deeper insights into customer opinions and preferences.</p>
+            <p>-Gain deeper insights into customer opinions and preferences.</p>
           </div>
           <div class="col-md-4 text-center mb-3">
             <div class="impact-icon mb-3">
               <i class="bi bi-lightning-charge" style="font-size: 3rem; color: #fd7e14;"></i>
             </div>
             <h5>Operational Efficiency</h5>
-            <p>Automatically categorize and prioritize customer feedback, reducing manual review time.</p>
+            <p>-Automatically categorize and prioritize customer feedback, reducing manual review time.</p>
           </div>
           <div class="col-md-4 text-center mb-3">
             <div class="impact-icon mb-3">
               <i class="bi bi-shield-check" style="font-size: 3rem; color: #17a2b8;"></i>
             </div>
             <h5>Proactive Issue Resolution</h5>
-            <p>Quickly identify negative feedback for prompt resolution.</p>
+            <p>-Quickly identify negative feedback for prompt resolution.</p>
           </div>
         </div>
         <div class="row mt-3">
@@ -349,14 +349,14 @@ HUGGINGFACE_API_KEY=your_api_key</code></pre>
                 <i class="bi bi-bar-chart" style="font-size: 3rem; color: #6f42c1;"></i>
             </div>
             <h5>Data-Driven Decision Making</h5>
-            <p>Use sentiment trends to inform product development and marketing strategies.</p>
+            <p>-Use sentiment trends to inform product development and marketing strategies.</p>
           </div>
           <div class="col-md-6 text-center">
             <div class="impact-icon mb-3">
               <i class="bi bi-emoji-smile" style="font-size: 3rem; color: #20c997;"></i>
             </div>
             <h5>Improved Customer Experience</h5>
-            <p>Address customer concerns more effectively, leading to higher satisfaction.</p>
+            <p>-Address customer concerns more effectively, leading to higher satisfaction.</p>
           </div>
         </div>
       </div>
