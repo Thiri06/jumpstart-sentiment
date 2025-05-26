@@ -19,8 +19,7 @@ Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.sh
 // Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
     Route::post('/products/{id}/reviews', [ProductController::class, 'storeReview'])->name('reviews.store');
-    Route::post('/
-    ', [App\Http\Controllers\ContactController::class, 'storeInquiry'])->name('contact.store');
+    Route::post('/contact', [ContactController::class, 'storeInquiry'])->name('contact.store');
 });
 
 Route::middleware(['auth', 'auth-user'])->group(function () {

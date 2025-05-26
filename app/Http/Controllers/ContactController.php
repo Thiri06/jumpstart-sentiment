@@ -17,6 +17,8 @@ class ContactController extends Controller
     public function storeInquiry(Request $request, SentimentAnalyzer $analyzer)
     {
         $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
             'description' => 'required|string|max:1000',
         ]);
 
